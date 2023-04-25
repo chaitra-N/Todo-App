@@ -1,5 +1,6 @@
 import React from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { BiEdit } from "react-icons/bi";
 
 const style = {
   li: `flex justify-between bg-slate-200 p-4 my-2 captilize`,
@@ -7,17 +8,30 @@ const style = {
   row: `flex`,
   text: `ml-2 cursor-pointer`,
   textComplete: `ml-2 cursor-pointer line-through`,
-  button: `cursor-pointer flex items-center`,
+  buttonContain: `cursor-pointer flex items-center`,
+  editBtn: `cursor-pointer flex items-center mr-2`,
 };
 
-const Todo = ({ todo }) => {
+const Todo = ({ todo, toggleComplete, deleteTodo }) => {
   return (
-    <li className={style.li}>
+    <li className={todo.completed ? style.liComplete : style.li}>
       <div className={style.row}>
-        <input type='checkbox' />
-        <p className={style.text}>{todo}</p>
+        <input
+          onChange={() => toggleComplete(todo)}
+          type='checkbox'
+          checked={todo.completed ? "checked" : ""}
+        />
+        <p
+          onClick={() => toggleComplete(todo)}
+          className={todo.completed ? style.textComplete : style.text}
+        >
+          {todo.text}
+        </p>
       </div>
-      <button>{<FaRegTrashAlt />}</button>
+      <div className={style.buttonContain}>
+        <button className={style.editBtn}>{<BiEdit />}</button>
+        <button onClick={() => deleteTodo(todo.id)}>{<FaRegTrashAlt />}</button>
+      </div>
     </li>
   );
 };

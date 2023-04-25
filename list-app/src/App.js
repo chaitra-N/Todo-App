@@ -1,7 +1,17 @@
 import React from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Todo from "./Todo";
+import { db } from "./firbase";
+import {
+  query,
+  collection,
+  onSnapshot,
+  doc,
+  updateDoc,
+  addDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
 const style = {
   bg: `h-screen w-screen p-4 bg-gradient-to-r from-[#2FB0ED] to-[#8F00FF]`,
@@ -16,21 +26,78 @@ const style = {
 };
 
 function App() {
-  const [list, setList] = useState(["Learn React", "Practise on LeetCode"]);
+  const [list, setList] = useState([]);
+  const [inputText, setInput] = useState("");
+  const [editInput, setEditInput] = useState(null);
+
+  //create todo
+  const createTodo = async (e) => {
+    e.preventDefault(e);
+    if (inputText === "") {
+      alert("Please enter a valid todo");
+      return;
+    }
+    await addDoc(collection(db, "todo"), {
+      text: inputText,
+      completed: false,
+    });
+    setInput("");
+  };
+
+  //read todo in firebase
+  useEffect(() => {
+    const q = query(collection(db, "todo"));
+    const unsuscribe = onSnapshot(q, (querySnapshot) => {
+      let todoArr = [];
+      querySnapshot.forEach((doc) => {
+        todoArr.push({ ...doc.data(), id: doc.id });
+      });
+      setList(todoArr);
+    });
+    return () => unsuscribe();
+  }, []);
+
+  // update todo infirebase
+  const toggleComplete = async (todo) => {
+    await updateDoc(doc(db, "todo", todo.id), {
+      completed: !todo.completed,
+    });
+  };
+
+  // delete todo in firebase
+  const deleteTodo = async (id) => {
+    await deleteDoc(doc(db, "todo", id));
+  };
+
+  //edit the todo
+  const editTodo = async (todo) => {};
 
   return (
     <div className={style.bg}>
       <div className={style.container}>
         <h3 className={style.heading}>Todo App</h3>
-        <form className={style.form}>
-          <input type='text' placeholder='Add Todo' className={style.input} />
+        <form onSubmit={createTodo} className={style.form}>
+          <input
+            value={inputText}
+            onChange={(e) => {
+              setInput(e.target.value);
+            }}
+            type='text'
+            placeholder='Add Todo'
+            className={style.input}
+          />
           <button className={style.button}>
             <AiOutlinePlus />
           </button>
         </form>
         <ul>
           {list.map((todo, index) => (
-            <Todo key={index} todo={todo} />
+            <Todo
+              key={index}
+              todo={todo}
+              toggleComplete={toggleComplete}
+              deleteTodo={deleteTodo}
+            />
           ))}
         </ul>
         <div className={style.btnContainer}>
