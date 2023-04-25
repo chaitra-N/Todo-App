@@ -28,7 +28,8 @@ const style = {
 function App() {
   const [list, setList] = useState([]);
   const [inputText, setInput] = useState("");
-  const [editInput, setEditInput] = useState(null);
+  const [editId, setEditId] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   //create todo
   const createTodo = async (e) => {
@@ -70,7 +71,12 @@ function App() {
   };
 
   //edit the todo
-  const editTodo = async (todo) => {};
+  const editTodo = async (todo) => {
+    await updateDoc(doc(db, "todo", todo.id), {
+      text: inputText,
+      completed: false,
+    });
+  };
 
   return (
     <div className={style.bg}>
@@ -97,13 +103,16 @@ function App() {
               todo={todo}
               toggleComplete={toggleComplete}
               deleteTodo={deleteTodo}
+              editTodo={editTodo}
             />
           ))}
         </ul>
         <div className={style.btnContainer}>
           <button className={style.clearBtn}>Clear Items</button>
         </div>
-        <p className={style.count}>You have 2 items</p>
+        <p
+          className={style.count}
+        >{`You have ${list.length} list items to complete`}</p>
       </div>
     </div>
   );

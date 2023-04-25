@@ -12,7 +12,7 @@ const style = {
   editBtn: `cursor-pointer flex items-center mr-2`,
 };
 
-const Todo = ({ todo, toggleComplete, deleteTodo }) => {
+const Todo = ({ todo, toggleComplete, deleteTodo, editTodo }) => {
   return (
     <li className={todo.completed ? style.liComplete : style.li}>
       <div className={style.row}>
@@ -29,7 +29,14 @@ const Todo = ({ todo, toggleComplete, deleteTodo }) => {
         </p>
       </div>
       <div className={style.buttonContain}>
-        <button className={style.editBtn}>{<BiEdit />}</button>
+        <button
+          className={style.editBtn}
+          onClic={() => {
+            editTodo();
+          }}
+        >
+          {<BiEdit />}
+        </button>
         <button onClick={() => deleteTodo(todo.id)}>{<FaRegTrashAlt />}</button>
       </div>
     </li>
