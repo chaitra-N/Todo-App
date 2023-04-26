@@ -29,14 +29,7 @@ const Todo = ({ todo, toggleComplete, deleteTodo, editTodo }) => {
         </p>
       </div>
       <div className={style.buttonContain}>
-        <button
-          className={style.editBtn}
-          onClic={() => {
-            editTodo();
-          }}
-        >
-          {<BiEdit />}
-        </button>
+        <button className={style.editBtn}>{<BiEdit />}</button>
         <button onClick={() => deleteTodo(todo.id)}>{<FaRegTrashAlt />}</button>
       </div>
     </li>

@@ -71,12 +71,12 @@ function App() {
   };
 
   //edit the todo
-  const editTodo = async (todo) => {
-    await updateDoc(doc(db, "todo", todo.id), {
-      text: inputText,
-      completed: false,
-    });
-  };
+  // const editTodo = async (todo) => {
+  //   await updateDoc(doc(db, "todo", todo.id), {
+  //     text: inputText,
+  //     completed: false,
+  //   });
+  // };
 
   return (
     <div className={style.bg}>
@@ -103,7 +103,7 @@ function App() {
               todo={todo}
               toggleComplete={toggleComplete}
               deleteTodo={deleteTodo}
-              editTodo={editTodo}
+              // editTodo={editTodo}
             />
           ))}
         </ul>
